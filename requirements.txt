@@ -1,0 +1,5 @@
+setuptools
+cffi
+cryptography
+azure-storage-queue==2.1.0
+requests
