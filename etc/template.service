@@ -1,0 +1,11 @@
+[Unit]
+Description=Tempaast #{probeName}
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/opt/tempaast/main.py #{probeDir} #{probeName} #{userId}
+StandardInput=tty-force
+
+[Install]
+WantedBy=multi-user.target

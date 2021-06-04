@@ -11,6 +11,8 @@ bold="\e[1m"
 uline="\e[4m"
 reset="\e[0m"
 
+INSTALLATION_DIR=/opt/tempaasttest
+
 PROBES=()
 
 checkRegistration() {
@@ -94,6 +96,15 @@ else
 fi
 
 echo -e "Setting up installation directory.."
-mkdir -p /opt/tempaast
-echo -e "Copying Application files...
+mkdir -p $INSTALLATION_DIR
 
+echo -e "Copying Application files..."
+cp -R python/. $INSTALLATION_DIR
+cp start.sh $INSTALLATION_DIR
+chown -R  tempaast: $INSTALLATION_DIR
+
+echo -e "Setting up service..."
+cp etc/template.service "tempaast-${nickname}.service"
+sed -i "s/#{probeName}/${nickname}/g" "tempaast-${nickname}.service"
+sed -i "s/#{probeId}/${probe_id}/g" "tempaast-${nickname}.service"
+sed -i "s/#{userId}/${used_id}/g" "tempaast-${nickname}.service"
