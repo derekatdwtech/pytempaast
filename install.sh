@@ -106,5 +106,5 @@ chown -R  tempaast: $INSTALLATION_DIR
 echo -e "Setting up service..."
 cp etc/template.service "tempaast-${nickname}.service"
 sed -i "s/#{probeName}/${nickname}/g" "tempaast-${nickname}.service"
-sed -i "s/#{probeDir}/${probe_id}/g" "tempaast-${nickname}.service"
-sed -i "s/#{userId}/${used_id}/g" "tempaast-${nickname}.service"
+sed -i "s|#{probeDir}|${probe_id}|g" "tempaast-${nickname}.service"
+sed -i "s/#{userId}/${user_id}/g" "tempaast-${nickname}.service"
