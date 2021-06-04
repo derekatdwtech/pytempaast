@@ -1,0 +1,7 @@
+{
+	"storageAccountName":"meatmonitorqueue",
+	"storageAccountKey":"Y63YIz8HPzQ4i7GDaYgn8CxkwRLMB8CUXmwZiRXf6mm9ssyvR/sBm3i/DfnhdGN7IaHCtOwfAfau29E2GC3z+g==",
+	"storageQueueName":"temperature",
+	"queueName": "temperature",
+	"apiBaseUri": "https://meatmonitorapi.azurewebsites.net/"
+}
