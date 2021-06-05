@@ -108,3 +108,9 @@ cp etc/template.service "tempaast-${nickname}.service"
 sed -i "s/#{probeName}/${nickname}/g" "tempaast-${nickname}.service"
 sed -i "s|#{probeDir}|${probe_id}|g" "tempaast-${nickname}.service"
 sed -i "s/#{userId}/${user_id}/g" "tempaast-${nickname}.service"
+mv "tempaast-${nickname}.service" /etc/systemd/system/
+systemctl enable "tempaast-${nickname}.service"
+systemctl start "tempaast-${nickname}.service"
+
+
+

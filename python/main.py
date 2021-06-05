@@ -6,7 +6,9 @@ import os
 import json
 import glob
 import sys
-
+PROBE_DIR sys.argv[1]
+PROBE_NAME = sys.argv[2]
+USER_ID = sys.argv[3]
 data = ""
 connString = ""
 probeName = ""
@@ -20,20 +22,8 @@ except Exception as e:
     print("Failed to load configuration file. Exiting Application with error: "+ e.message)
     quit()
 
-# Get Probe Identifier
-deviceDirectories = os.listdir('/sys/bus/w1/devices')
-if len(deviceDirectories) > 0:
-    for device in deviceDirectories:
-        if device.startswith('28-'):
-            probeName=str(device)
-    if probeName == "":
-        sys.exit("ERROR: No probes have been found. Exiting Application")
-            
-
-
-
 queue = MessageService(connString)
-probe = Probe(probeName, '/sys/bus/w1/devices/' + probeName, 'w1_slave')
+probe = Probe(PROBE_NAME, PROBE_DIR, 'w1_slave')
 print("Initializing Probe Configuration")
 
 probeConfig = Config(data['apiBaseUri'])
