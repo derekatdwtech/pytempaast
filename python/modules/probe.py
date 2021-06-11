@@ -2,13 +2,16 @@ import os
 import glob
 import time
 import json
+import logging
 from datetime import datetime
+
 
 class Probe:
     def __init__(self, name, probeDir, probeFile):
         self.name = name
         self.probeDir = probeDir
         self.probeFile = probeFile
+        logging.getLogger("probe")
         os.system('modprobe w1-gpio')
         os.system('modprobe w1-therm')
 
@@ -22,7 +25,7 @@ class Probe:
     def readTemp(self):
         lines = self.__readTempRaw()
         while lines[0].strip()[-3:] != 'YES':
-            print("Probe is not ready. Retrying...")
+            logging.info("Probe is not ready. Retrying...")
             time.sleep(1)
             lines = self.__readTempRaw()
         equals_pos = lines[1].find('t=')
@@ -30,7 +33,7 @@ class Probe:
             temp_string = lines[1][equals_pos+2:]
             self.temp_c = float(temp_string) / 1000.0
             self.temp_f = self.__celToFar(self.temp_c)
-            
+
             timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")
             result = {'name':self.name,'time':timestamp, 'id': '', 'temperature':{'f':self.temp_f,'c':self.temp_c}}
             return json.dumps(result)
