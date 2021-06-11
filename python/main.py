@@ -28,7 +28,7 @@ rest =  Rest(API_URI)
 
 # Validate API_KEY. This will also return basic user Information
 logging.info("Validating API Key...")
-user_id = rest.Get(f"api/key/validate", headers)
+user_id = rest.Get("api/key/validate", headers)
 
 # Get or Create Probe Configuration
 logging.info("Attempting to get probe config from the API")
