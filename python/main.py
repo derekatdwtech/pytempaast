@@ -51,5 +51,5 @@ while True:
     print("Probe interval read as " + str(sleepTime))
     result = probe.readTemp()
     queue.AddMessage(data['storageQueueName'], result)
-    time.sleep(sleepTime['readingIntervalInSeconds'])
+    time.sleep(sleepTime)
     
