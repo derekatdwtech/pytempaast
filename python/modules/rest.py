@@ -8,7 +8,7 @@ class Rest:
 
     def __init__(self, baseUri):
         self.baseUri = baseUri
-        logging.getLogger('rest')
+        logging.getLogger('root')
 
     def Get(self, route, headers):
         response = requests.get(self.baseUri + route, headers=headers)
