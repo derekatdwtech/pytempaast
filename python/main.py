@@ -1,9 +1,6 @@
 from modules.probe import Probe
 from modules.rest import Rest
 import time
-import os
-import json
-import glob
 import sys
 import logging
 
@@ -15,6 +12,7 @@ API_URI="https://meatmonitorapi.azurewebsites.net/"
 
 #Variables to hold values
 headers={'Api-Key': API_KEY}
+PROBE_ID=PROBE_DIR.split("/")
 
 #Initialize Logger
 logging.basicConfig(filename='pytempaast.log', filemode='a')
@@ -35,7 +33,6 @@ logging.info("Attempting to get probe config from the API")
 probeConfig = rest.Get("api/probe/config/" + PROBE_NAME, headers)
 if  probeConfig is None:
     logging.info("No configuration for this device was found. Creating with base configuration...")
-    PROBE_ID=PROBE_DIR.split("/")
     BASE_CONFIG={"partitionKey": user_id, "rowKey": PROBE_ID[len(PROBE_ID) - 1], "nickname": PROBE_NAME, "readingIntervalInSeconds": 300, "tempThresholdInCelcius": 0, "user_id": user_id}
     probeConfig = rest.Post("api/probe/config", BASE_CONFIG, headers)
     
