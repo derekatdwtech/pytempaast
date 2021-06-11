@@ -14,7 +14,7 @@ API_KEY = sys.argv[3]
 API_URI="https://meatmonitor.azurewebsites.net/"
 
 #Variables to hold values
-headers={'Api-Key', API_KEY}
+headers={'Api-Key': API_KEY}
 
 #Initialize Logger
 logging.basicConfig(filename='pytempaast.log', filemode='a')
