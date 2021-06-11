@@ -17,7 +17,7 @@ headers={'Api-Key': API_KEY}
 PROBE_ID=PROBE_DIR.split("/")
 
 #Initialize Logger
-logging.basicConfig(filename='pytempaast.log', filemode='a')
+logging.basicConfig(filename='pytempaast.log', filemode='w')
 
 
 if not PROBE_DIR or  not PROBE_NAME or not API_KEY:
