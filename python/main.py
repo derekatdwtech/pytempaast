@@ -33,7 +33,7 @@ user_id = rest.Get("api/key/validate", headers)
 # Get or Create Probe Configuration
 logging.info("Attempting to get probe config from the API")
 
-probeConfig = rest.Get(f"api/probe/config/{PROBE_NAME}")
+probeConfig = rest.Get(f"api/probe/config/{PROBE_NAME}", headers)
 if probeConfig == "":
     logging.info("No configuration for this device was found. Creating with base configuration...")
     PROBE_ID=PROBE_DIR.split("/")
