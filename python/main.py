@@ -33,12 +33,12 @@ user_id = rest.Get("api/key/validate", headers)
 # Get or Create Probe Configuration
 logging.info("Attempting to get probe config from the API")
 
-probeConfig = rest.Get(f"api/probe/config/{PROBE_NAME}", headers)
+probeConfig = rest.Get("api/probe/config/" + PROBE_NAME, headers)
 if probeConfig == "":
     logging.info("No configuration for this device was found. Creating with base configuration...")
     PROBE_ID=PROBE_DIR.split("/")
     BASE_CONFIG={"partitionKey": user_id, "rowKey": PROBE_ID[len(PROBE_ID) - 1], "nickname": PROBE_NAME, "readingIntervalInSeconds": 300, "tempThresholdInCelcius": 0, "user_id": user_id}
-    probeConfig = rest.Post(f"api/probe/config", BASE_CONFIG, headers)
+    probeConfig = rest.Post("api/probe/config", BASE_CONFIG, headers)
     
 probe = Probe(PROBE_NAME, PROBE_DIR, 'w1_slave')
 
@@ -46,6 +46,6 @@ while True:
     sleepTime = probeConfig['readingIntervalInSeconds']
     logging.info("Probe interval read as " + str(sleepTime))
     result = probe.readTemp()
-    rest.Post(f"api/message?temperature", result, headers)
+    rest.Post("api/message?temperature", result, headers)
     time.sleep(sleepTime)
     
