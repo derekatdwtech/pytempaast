@@ -75,9 +75,9 @@ echo -e "${green}***************************************************************
 #Ensure user has registered
 checkRegistration
 
-read -p "$(echo -e "Please paste in your UserID. You can retrieve this from https://app.tempaast.com/profile: ${reset}")" user_id
-if [[ $user_id == "" ]]; then
-	echo -e "${red}User ID is required. Please register for an account to continue. An invalid User ID will fail to authenticate against our API${reset}"
+read -p "$(echo -e "Please paste in your API Key. You can retrieve this from https://app.tempaast.com/profile: ${reset}")" api_key
+if [[ $api_key == "" ]]; then
+	echo -e "${red}API Key is required. Please register for an account to continue. An invalid API Key will fail to authenticate against our API${reset}"
 	exit 1
 fi
 
@@ -107,7 +107,7 @@ echo -e "Setting up service..."
 cp etc/template.service "tempaast-${nickname}.service"
 sed -i "s/#{probeName}/${nickname}/g" "tempaast-${nickname}.service"
 sed -i "s|#{probeDir}|${probe_id}|g" "tempaast-${nickname}.service"
-sed -i "s/#{userId}/${user_id}/g" "tempaast-${nickname}.service"
+sed -i "s/#{userId}/${api_key}/g" "tempaast-${nickname}.service"
 mv "tempaast-${nickname}.service" /etc/systemd/system/
 systemctl enable "tempaast-${nickname}.service"
 systemctl start "tempaast-${nickname}.service"

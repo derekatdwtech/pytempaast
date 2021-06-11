@@ -30,8 +30,9 @@ class Probe:
             temp_string = lines[1][equals_pos+2:]
             self.temp_c = float(temp_string) / 1000.0
             self.temp_f = self.__celToFar(self.temp_c)
+            
             timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")
-            result = {'name':self.name,'time':timestamp,'temperature':{'f':self.temp_f,'c':self.temp_c}}
+            result = {'name':self.name,'time':timestamp, 'id': '', 'temperature':{'f':self.temp_f,'c':self.temp_c}}
             return json.dumps(result)
 
     def __celToFar(self, temp_c):
