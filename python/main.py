@@ -11,7 +11,7 @@ import logging
 PROBE_DIR = sys.argv[1]
 PROBE_NAME = sys.argv[2]
 API_KEY = sys.argv[3]
-API_URI="https://meatmonitor.azurewebsites.net/"
+API_URI="https://meatmonitorapi.azurewebsites.net/"
 
 #Variables to hold values
 headers={'Api-Key': API_KEY}

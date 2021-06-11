@@ -11,5 +11,5 @@ This project serves as a system where you can connect your DS18B20 sensors into 
 ## Contributing
 This is my first open-sourced project. If you want to get involved with this project you can do so in a few ways:
 1. Recommend this project to a hobbyist friend.
-2. Start opening pull requests. I have to review them all for now.
+2. If you wish to collaborate, email derekcwilliams@protonmail.com
 3. Donate. The website contains information on our run rate. I'm not trying to profit, but it would be nice to break even :)
