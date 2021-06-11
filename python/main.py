@@ -1,5 +1,4 @@
 from modules.probe import Probe
-from modules.queue import MessageService
 from modules.rest import Rest
 import time
 import os
