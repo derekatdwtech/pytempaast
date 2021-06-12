@@ -44,7 +44,7 @@ while True:
     pc = probe.GetProbeConfig(user_id)
     sleepTime = pc['readingIntervalInSeconds']
     logger.info("Probe read interval read as " + str(sleepTime))
-    result = probe.readTemp()
+    result = probe.readTemp(user_id)
 
     if result is not None:
        message.PostMessage(config.GetTemperatureQueue(), json.dumps(result))
