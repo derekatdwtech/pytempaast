@@ -1,0 +1,4 @@
+{
+    "ApiUri": "https://meatmonitorapi.azurewebsites.net/",
+    "TemperatureQueue": "temperature"
+}

@@ -3,7 +3,11 @@ import glob
 import time
 import json
 import logging
+import requests
+from modules.config import Config
+from modules.logger import logger
 from datetime import datetime
+
 
 
 class Probe:
@@ -11,10 +15,17 @@ class Probe:
         self.name = name
         self.probeDir = probeDir
         self.probeFile = probeFile
-        logging.getLogger("probe")
-        os.system('modprobe w1-gpio')
-        os.system('modprobe w1-therm')
+        self.config = Config()
 
+        if not os.path.exists(self.probeDir + "/" + self.probeFile):
+            logger.critical("File not found at " + self.probeDir + "/" + self.probeFile + ". Please ensure your probe is working correctly and restart the service.")
+            quit()
+
+        if os.system('modprobe w1-gpio') != 0 and os.system('modprobe w1-therm') != 0:
+            logger.critical("'modprobe' failed to execute. Ensure the modprobe executable exists on your system.")
+            #quit()
+
+    # Read Raw Temperature
     def __readTempRaw(self):
         device_folder = glob.glob(self.probeDir)[0]
         file = open(device_folder + '/' + self.probeFile, 'r')
@@ -22,11 +33,15 @@ class Probe:
         file.close()
         return lines
 
+    # Convert temp
+    def __celToFar(self, temp_c):
+        return temp_c * 9.0 / 5.0 + 32
+
     def readTemp(self):
         lines = self.__readTempRaw()
         while lines[0].strip()[-3:] != 'YES':
-            logging.info("Probe is not ready. Retrying...")
-            time.sleep(1)
+            logger.info("Probe is not ready. Retrying in 5 seconds...")
+            time.sleep(5)
             lines = self.__readTempRaw()
         equals_pos = lines[1].find('t=')
         if equals_pos != -1:
@@ -38,5 +53,25 @@ class Probe:
             result = {'name':self.name,'time':timestamp, 'id': '', 'temperature':{'f':self.temp_f,'c':self.temp_c}}
             return json.dumps(result)
 
-    def __celToFar(self, temp_c):
-        return temp_c * 9.0 / 5.0 + 32
+    def GetProbeConfig(self, user):
+        PROBE_ID_TEMP = self.probeDir.split("/")
+        PROBE_ID = PROBE_ID_TEMP[len(PROBE_ID_TEMP) - 1]
+        BASE_CONFIG={"partitionKey": user, "rowKey": PROBE_ID, "nickname": self.name, "readingIntervalInSeconds": 300, "tempThresholdInCelcius": 0, "user_id": user}
+
+        res = requests.get(self.config.GetApiUri() + "api/probe/config?probeId=" + PROBE_ID, headers=self.config.GetApiHeaders())
+        if res.status_code == 200:
+            return json.loads(res.content.decode('utf-8'))
+        if res.status_code == 404:
+            logger.warn("No probe configuration was found for probe " + PROBE_ID + ". Creating new configuration with config base...")
+            conf = requests.post(self.config.GetApiUri() + "api/probe/config", headers=self.config.GetApiHeaders(), data=json.dumps(BASE_CONFIG))
+            if conf.status_code == 200:
+                return json.loads(conf.content.decode("UTF-8"))
+            else:
+                logger.error("Unable to create noew probe configuration.")
+                return json.loads({})
+        else:
+            logger.error("An unknown error has occurred trying to retrieve probe configuration. Try again later.")
+            return json.loads({})
+
+
+

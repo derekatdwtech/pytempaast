@@ -1,52 +1,56 @@
 
 from modules.probe import Probe
-from modules.rest import Rest
+from modules.message import Message
+from modules.logger import logger
+from modules.config import Config
+import json
+import requests
 import time
 import sys
-import logging
+
+
 
 
 # CLI Parameters
 PROBE_DIR = sys.argv[1]
 PROBE_NAME = sys.argv[2]
 API_KEY = sys.argv[3]
-API_URI="https://meatmonitorapi.azurewebsites.net/"
-
-#Variables to hold values
-headers={'Api-Key': API_KEY}
-PROBE_ID=PROBE_DIR.split("/")
-
-#Initialize Logger
-logging.basicConfig(filename='pytempaast.log', filemode='w')
 
 
+# Check for command line arguments
 if not PROBE_DIR or  not PROBE_NAME or not API_KEY:
-    logging.error("Usage: 'python3 main.py [PROBE_DIRECTORY] [PROBE_NAME] [API_KEY]")
+    logger.error("Usage: 'python3 main.py [PROBE_DIRECTORY] [PROBE_NAME] [API_KEY]")
     quit()
 
-#Initialize REST Module
-rest =  Rest(API_URI)
+#Variables to hold values
+PROBE_ID=PROBE_DIR.split("/")
 
-# Validate API_KEY. This will also return basic user Information
-logging.info("Validating API Key...")
-user_id = rest.Get("api/key/validate", headers)['userId']
-logging.debug("User ID is " + user_id)
-
-# Get or Create Probe Configuration
-logging.info("Attempting to get probe config from the API")
-probeConfig = rest.Get("api/probe/config/" + PROBE_ID[len(PROBE_ID) - 1], headers)
-
-if probeConfig is None:
-    logging.info("No configuration for this device was found. Creating with base configuration...")
-    BASE_CONFIG={"partitionKey": user_id, "rowKey": PROBE_ID[len(PROBE_ID) - 1], "nickname": PROBE_NAME, "readingIntervalInSeconds": 300, "tempThresholdInCelcius": 0, "user_id": user_id}
-    probeConfig = rest.Post("api/probe/config", BASE_CONFIG, headers)
-    
+#Initialize Modules
+config = Config()
+message = Message()
 probe = Probe(PROBE_NAME, PROBE_DIR, 'w1_slave')
 
+# Validate API_KEY. This will also return basic user Information
+api_res = requests.get(config.GetApiUri() + "api/key/validate", headers=config.GetApiHeaders())
+if api_res.status_code == 401:
+    logger.error("Your API Key is unauthorized. Please reinitialize this service with a new API key.")
+    quit()
+
+# Set user ID from the above API Validation   
+user_id = json.loads(api_res.content.decode('UTF-8'))['userId']
+
+# Start polling
 while True:
-    sleepTime = probeConfig['readingIntervalInSeconds']
-    logging.info("Probe interval read as " + str(sleepTime))
+    # Check for backed messages
+    message.CheckForBackUpMessages(config.GetTemperatureQueue())
+    # Get Probe Configuration
+    pc = probe.GetProbeConfig(user_id)
+    sleepTime = pc['readingIntervalInSeconds']
+    logger.info("Probe interval read as " + str(sleepTime))
     result = probe.readTemp()
-    rest.Post("api/message?temperature", result, headers)
+
+    if result is not None:
+       message.PostMessage(config.GetTemperatureQueue(), result)
+    
     time.sleep(sleepTime)
     
