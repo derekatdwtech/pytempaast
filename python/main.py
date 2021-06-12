@@ -22,9 +22,6 @@ if not PROBE_DIR or  not PROBE_NAME or not API_KEY:
     logger.error("Usage: 'python3 main.py [PROBE_DIRECTORY] [PROBE_NAME] [API_KEY]")
     quit()
 
-#Variables to hold values
-PROBE_ID=PROBE_DIR.split("/")
-
 #Initialize Modules
 config = Config()
 message = Message()

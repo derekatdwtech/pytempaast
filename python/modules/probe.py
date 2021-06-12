@@ -38,6 +38,8 @@ class Probe:
         return temp_c * 9.0 / 5.0 + 32
 
     def readTemp(self):
+        PROBE_ID_TEMP=self.probeDir.split("/")
+        PROBE_ID=PROBE_ID_TEMP[len(PROBE_ID_TEMP) - 1]
         lines = self.__readTempRaw()
         while lines[0].strip()[-3:] != 'YES':
             logger.info("Probe is not ready. Retrying in 5 seconds...")
@@ -50,7 +52,7 @@ class Probe:
             self.temp_f = self.__celToFar(self.temp_c)
 
             timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")
-            result = {'name':self.name,'time':timestamp, 'id': '', 'temperature':{'f':self.temp_f,'c':self.temp_c}}
+            result = {'name':self.name,'time':timestamp, 'id': PROBE_ID , 'temperature':{'f':self.temp_f,'c':self.temp_c}}
             return json.dumps(result)
 
     def GetProbeConfig(self, user):
