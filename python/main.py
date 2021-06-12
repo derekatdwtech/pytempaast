@@ -46,7 +46,7 @@ while True:
     # Get Probe Configuration
     pc = probe.GetProbeConfig(user_id)
     sleepTime = pc['readingIntervalInSeconds']
-    logger.info("Probe interval read as " + str(sleepTime))
+    logger.info("Probe read interval read as " + str(sleepTime))
     result = probe.readTemp()
 
     if result is not None:

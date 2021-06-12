@@ -12,8 +12,9 @@ class Message:
     def PostMessage(self, queue, data):
         res = requests.post(self.config.GetApiUri() + "api/message?queue=" + queue, data=data, headers=self.config.GetApiHeaders())
         if res.status_code != 200:
+            logger.error("We were unable to send your message. We will save it locally and send it later. Status code: " + str(res.status_code) + " Error: " + res.text)
+
             with open("backup_readings.bak", mode='a') as readings:
-                logger.error("We were unable to send your message. We will save it locally and send it later.")
                 readings.write(data)
             readings.close()
             return False
