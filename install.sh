@@ -59,8 +59,6 @@ chooseProbeName() {
 	fi
 }
 
-
-
 # Start the real work
 
 if [[ $EUID != 0 ]]; then
@@ -68,8 +66,27 @@ if [[ $EUID != 0 ]]; then
 	exit 1
 fi
 
+# Check OS Type
+if [[ ! $OSTYPE == "linux"* ]]; then
+	echo -e "${red}This package only supports linux operating systems. Exiting...${reset}"
+	exit 1
+fi
+
+# Check for modprobe binary
+if ! which modprobe > /dev/null 2>&1; then
+	# TODO Install modprobe for each os
+	echo "${red}modprobe binary was not found. This is required. Please install modprobe before continuing.${reset}"
+	exit 1
+fi
+
+# Check for python binary
+if ! which python > /dev/null 2>&1; then
+	echo "${red}python binary was not found. This is required. Please install modprobe before continuing.${reset}"
+	exit 1
+fi
+
 echo -e "${green}**********************************************************************************${reset}"
-echo -e "${green}********* Welcome to PyTempaast! LEt's walk you through the installation *********$reset"
+echo -e "${green}********* Welcome to PyTempaast! LEt's walk you through the installation *********${rese}t"
 echo -e "${green}**********************************************************************************${reset}"
 
 #Ensure user has registered
@@ -79,6 +96,12 @@ read -p "$(echo -e "Please paste in your API Key. You can retrieve this from htt
 if [[ $api_key == "" ]]; then
 	echo -e "${red}API Key is required. Please register for an account to continue. An invalid API Key will fail to authenticate against our API${reset}"
 	exit 1
+fi
+
+# Choose Installation directory
+read -p "$(echo -e $green"Where should we install PyTempaast? (Default: /opt/tempaast): "$reset)" INSTALLATION_DIR
+if [[ $INSTALLATION_DIR == "" ]]; then
+	INSTALLATION_DIR=/opt/tempaast
 fi
 
 # Discover TEmperature Probes
