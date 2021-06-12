@@ -18,6 +18,7 @@ class Message:
             readings.close()
             return False
         else: 
+            logger.debug("Successfully sent message " + data)
             return True
 
     def CheckForBackUpMessages(self, queue):
