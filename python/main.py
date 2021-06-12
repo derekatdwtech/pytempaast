@@ -50,7 +50,7 @@ while True:
     result = probe.readTemp()
 
     if result is not None:
-       message.PostMessage(config.GetTemperatureQueue(), result)
+       message.PostMessage(config.GetTemperatureQueue(), json.dumps(result))
     
     time.sleep(sleepTime)
     
