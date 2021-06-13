@@ -124,12 +124,12 @@ echo -e "Setting up installation directory.."
 mkdir -p $INSTALLATION_DIR
 
 echo -e "Copying Application files..."
-cp -R python/. $INSTALLATION_DIR
+cp -Rf python/. $INSTALLATION_DIR
 cp start.sh $INSTALLATION_DIR
-chown -R  tempaast: $INSTALLATION_DIR
+chown -Rf  tempaast: $INSTALLATION_DIR
 
 echo -e "Setting up service..."
-cp etc/template.service "tempaast-${nickname}.service"
+cp -f etc/template.service "tempaast-${nickname}.service"
 sed -i "s/#{probeName}/${nickname}/g" "tempaast-${nickname}.service"
 sed -i "s|#{probeDir}|${probe_id}|g" "tempaast-${nickname}.service"
 sed -i "s/#{userId}/${api_key}/g" "tempaast-${nickname}.service"
