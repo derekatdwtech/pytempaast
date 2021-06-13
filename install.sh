@@ -129,6 +129,7 @@ echo -e "Copying Application files..."
 cp -Rf python/. $INSTALLATION_DIR
 chown -Rf  tempaast: $INSTALLATION_DIR
 chmod -R 775 $INSTALLATION_DIR
+chmod +x $INSTALLATION_DIR/main.py
 
 echo -e "Installing python requirements..."
 pip install -r $INSTALLATION_DIR/requirements.txt
