@@ -5,7 +5,7 @@ from modules.config import Config
 config = Config()
 
 #setup handlers
-fHand = logging.FileHandler("pytempaast.log")
+fHand = logging.FileHandler(sys.argv[2] + ".pytempaast.log")
 sHand = logging.StreamHandler(sys.stdout)
 logging.basicConfig(
     level=logging.INFO,
