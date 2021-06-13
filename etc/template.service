@@ -5,6 +5,8 @@ After=multi-user.target
 [Service]
 Type=simple
 ExecStart=#{python_exec} #{installation_dir}/main.py "#{probeDir}" "#{probeName}" "#{userId}"
+User=tempaast
+Group=tempaast
 StandardInput=tty-force
 
 [Install]
