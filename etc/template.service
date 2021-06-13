@@ -5,10 +5,13 @@ After=multi-user.target
 [Service]
 Type=simple
 WorkingDirectory=#{installation_dir}
-ExecStart=main.py "#{probeDir}" "#{probeName}" "#{userId}"
+ExecStart=#{installation_dir}/main.py "#{probeDir}" "#{probeName}" "#{userId}"
 User=tempaast
 Group=tempaast
 StandardInput=tty-force
+
+Restart=Always
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
