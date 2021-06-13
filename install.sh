@@ -103,6 +103,8 @@ read -p "$(echo -e $green"Where should we install PyTempaast? (Default: /opt/tem
 if [[ $INSTALLATION_DIR == "" ]]; then
 	INSTALLATION_DIR=/opt/tempaast
 fi
+# create installation dir
+mkdir -p $INSTALLATION_DIR
 
 # Discover TEmperature Probes
 findTempProbes
