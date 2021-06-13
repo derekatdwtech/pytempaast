@@ -144,3 +144,4 @@ mv "tempaast-${nickname}.service" /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable "tempaast-${nickname}.service"
 systemctl start "tempaast-${nickname}.service"
+
