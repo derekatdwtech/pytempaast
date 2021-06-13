@@ -83,7 +83,8 @@ fi
 if ! which python > /dev/null 2>&1; then
 	echo "${red}python binary was not found. This is required. Please install modprobe before continuing.${reset}"
 	exit 1
-fi
+else
+	PYTHON_EXEC=$(which python)
 
 echo -e "${green}**********************************************************************************${reset}"
 echo -e "${green}********* Welcome to PyTempaast! LEt's walk you through the installation *********${rese}t"
@@ -136,6 +137,8 @@ sed -i "s/#{probeName}/${nickname}/g" "tempaast-${nickname}.service"
 sed -i "s|#{probeDir}|${probe_id}|g" "tempaast-${nickname}.service"
 sed -i "s/#{userId}/${api_key}/g" "tempaast-${nickname}.service"
 sed -i "s|#{installation_dir}|${INSTALLATION_DIR}|g" "tempaast-${nickname}.service"
+sed -i "s|#{python_exec}|${PYTHON_EXEC}|g" "tempaast-${nickname}.service"
+
 
 mv "tempaast-${nickname}.service" /etc/systemd/system/
 systemctl daemon-reload
