@@ -85,6 +85,7 @@ if ! which python > /dev/null 2>&1; then
 	exit 1
 else
 	PYTHON_EXEC=$(which python)
+fi
 
 echo -e "${green}**********************************************************************************${reset}"
 echo -e "${green}********* Welcome to PyTempaast! LEt's walk you through the installation *********${rese}t"
