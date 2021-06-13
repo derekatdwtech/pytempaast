@@ -1,21 +1,21 @@
-import requests
 import json
-import os
-from requests.exceptions import HTTPError
+import sys
 
 class Config:
 
-    def __init__(self, baseUri):
-        self.baseUri = baseUri
+    def __init__(self):
+        with open("config.json", 'r') as file:
+            self.config = json.load(file)
 
-    def GetConfig(self, route):
-        try:
-            response = requests.get(self.baseUri + route)
-            if(response.status_code == 200):
-                return json.loads(response.content.decode('utf-8'))
-        except HTTPError as e:
-            print("Failed to get probe configuration with message: " + e.message)
-            quit()
-    
-    def __RegisterNewDevice(self, route):
-        print(route)
+    def GetApiUri(self):
+        return self.config["ApiUri"]
+
+    def GetApiHeaders(self):
+        headers={'Api-Key': sys.argv[3], "Content-Type": "application/json"}
+        return headers
+
+    def GetTemperatureQueue(self):
+        return self.config["TemperatureQueue"]
+
+    def GetLogLevel(self):
+        return self.config["logLevel"]

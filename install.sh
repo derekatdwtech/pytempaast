@@ -59,8 +59,6 @@ chooseProbeName() {
 	fi
 }
 
-
-
 # Start the real work
 
 if [[ $EUID != 0 ]]; then
@@ -68,18 +66,47 @@ if [[ $EUID != 0 ]]; then
 	exit 1
 fi
 
+# Check OS Type
+if [[ ! $OSTYPE == "linux"* ]]; then
+	echo -e "${red}This package only supports linux operating systems. Exiting...${reset}"
+	exit 1
+fi
+
+# Check for modprobe binary
+if ! which modprobe > /dev/null 2>&1; then
+	# TODO Install modprobe for each os
+	echo "${red}modprobe binary was not found. This is required. Please install modprobe before continuing.${reset}"
+	exit 1
+fi
+
+# Check for python binary
+if ! which python > /dev/null 2>&1; then
+	echo "${red}python binary was not found. This is required. Please install modprobe before continuing.${reset}"
+	exit 1
+else
+	PYTHON_EXEC=$(which python)
+fi
+
 echo -e "${green}**********************************************************************************${reset}"
-echo -e "${green}********* Welcome to PyTempaast! LEt's walk you through the installation *********$reset"
+echo -e "${green}********* Welcome to PyTempaast! LEt's walk you through the installation *********${rese}t"
 echo -e "${green}**********************************************************************************${reset}"
 
 #Ensure user has registered
 checkRegistration
 
-read -p "$(echo -e "Please paste in your UserID. You can retrieve this from https://app.tempaast.com/profile: ${reset}")" user_id
-if [[ $user_id == "" ]]; then
-	echo -e "${red}User ID is required. Please register for an account to continue. An invalid User ID will fail to authenticate against our API${reset}"
+read -p "$(echo -e "Please paste in your API Key. You can retrieve this from https://app.tempaast.com/profile: ${reset}")" api_key
+if [[ $api_key == "" ]]; then
+	echo -e "${red}API Key is required. Please register for an account to continue. An invalid API Key will fail to authenticate against our API${reset}"
 	exit 1
 fi
+
+# Choose Installation directory
+read -p "$(echo -e $green"Where should we install PyTempaast? (Default: /opt/tempaast): "$reset)" INSTALLATION_DIR
+if [[ $INSTALLATION_DIR == "" ]]; then
+	INSTALLATION_DIR=/opt/tempaast
+fi
+# create installation dir
+mkdir -p $INSTALLATION_DIR
 
 # Discover TEmperature Probes
 findTempProbes
@@ -95,22 +122,29 @@ else
 	useradd tempaast
 fi
 
-echo -e "Setting up installation directory.."
+echo -e "Setting up installation directory..."
 mkdir -p $INSTALLATION_DIR
 
 echo -e "Copying Application files..."
-cp -R python/. $INSTALLATION_DIR
-cp start.sh $INSTALLATION_DIR
-chown -R  tempaast: $INSTALLATION_DIR
+cp -Rf python/. $INSTALLATION_DIR
+chown -Rf  tempaast: $INSTALLATION_DIR
+chmod -R 775 $INSTALLATION_DIR
+chmod +x $INSTALLATION_DIR/main.py
+
+echo -e "Installing python requirements..."
+pip install -r $INSTALLATION_DIR/requirements.txt
 
 echo -e "Setting up service..."
-cp etc/template.service "tempaast-${nickname}.service"
+cp -f etc/template.service "tempaast-${nickname}.service"
 sed -i "s/#{probeName}/${nickname}/g" "tempaast-${nickname}.service"
 sed -i "s|#{probeDir}|${probe_id}|g" "tempaast-${nickname}.service"
-sed -i "s/#{userId}/${user_id}/g" "tempaast-${nickname}.service"
+sed -i "s/#{userId}/${api_key}/g" "tempaast-${nickname}.service"
+sed -i "s|#{installation_dir}|${INSTALLATION_DIR}|g" "tempaast-${nickname}.service"
+sed -i "s|#{python_exec}|${PYTHON_EXEC}|g" "tempaast-${nickname}.service"
+
+
 mv "tempaast-${nickname}.service" /etc/systemd/system/
+systemctl daemon-reload
 systemctl enable "tempaast-${nickname}.service"
 systemctl start "tempaast-${nickname}.service"
-
-
 

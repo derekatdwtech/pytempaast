@@ -1,11 +1,17 @@
 [Unit]
-Description=Tempaast #{probeName}
+Description=Tempaast-#{probeName}
 After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/opt/tempaast/main.py "#{probeDir}" #{probeName} #{userId}
+WorkingDirectory=#{installation_dir}
+ExecStart=#{installation_dir}/main.py "#{probeDir}" "#{probeName}" "#{userId}"
+User=tempaast
+Group=tempaast
 StandardInput=tty-force
+
+Restart=Always
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
