@@ -1,10 +1,10 @@
 [Unit]
-Description=Tempaast #{probeName}
+Description=Tempaast-#{probeName}
 After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=bash -c 'python #{installation_dir}/main.py "#{probeDir}" "#{probeName}" "#{userId}"'
+ExecStart=python #{installation_dir}/main.py "#{probeDir}" "#{probeName}" "#{userId}"
 StandardInput=tty-force
 
 [Install]
