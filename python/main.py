@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 from modules.probe import Probe
 from modules.message import Message
 from modules.logger import logger
