@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=python #{installation_dir}/main.py "#{probeDir}" #{probeName} #{userId}
+ExecStart=bash -c 'python #{installation_dir}/main.py "#{probeDir}" "#{probeName}" "#{userId}"'
 StandardInput=tty-force
 
 [Install]
