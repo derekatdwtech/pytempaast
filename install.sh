@@ -120,13 +120,15 @@ else
 	useradd tempaast
 fi
 
-echo -e "Setting up installation directory.."
+echo -e "Setting up installation directory..."
 mkdir -p $INSTALLATION_DIR
 
 echo -e "Copying Application files..."
 cp -Rf python/. $INSTALLATION_DIR
-cp start.sh $INSTALLATION_DIR
 chown -Rf  tempaast: $INSTALLATION_DIR
+
+echo -e "Installing python requirements..."
+pip install -r $INSTALLATION_DIR/requirements.txt
 
 echo -e "Setting up service..."
 cp -f etc/template.service "tempaast-${nickname}.service"
@@ -136,8 +138,6 @@ sed -i "s/#{userId}/${api_key}/g" "tempaast-${nickname}.service"
 sed -i "s|#{installation_dir}|${INSTALLATION_DIR}|g" "tempaast-${nickname}.service"
 
 mv "tempaast-${nickname}.service" /etc/systemd/system/
+systemctl daemon-reload
 systemctl enable "tempaast-${nickname}.service"
 systemctl start "tempaast-${nickname}.service"
-
-
-
