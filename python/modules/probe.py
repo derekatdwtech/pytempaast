@@ -67,7 +67,9 @@ class Probe:
             logger.warn("No probe configuration was found for probe " + PROBE_ID + ". Creating new configuration with config base...")
             conf = requests.post(self.config.GetApiUri() + "api/probe/config", headers=self.config.GetApiHeaders(), data=json.dumps(BASE_CONFIG))
             if conf.status_code == 200:
-                return [json.loads(conf.content.decode("UTF-8"))]
+                result = []
+                result.append(json.loads(conf.content.decode("UTF-8")))
+                return result
             else:
                 logger.error("Unable to create new probe configuration.")
                 return json.loads({})
