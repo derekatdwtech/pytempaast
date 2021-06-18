@@ -72,7 +72,7 @@ class Probe:
                 logger.error("Unable to create new probe configuration.")
                 return json.loads({})
         else:
-            logger.error("An unknown error has occurred trying to retrieve probe configuration. Try again later. Error code: " + res.status_code + ". Message: " + res.text)
+            logger.error("An unknown error has occurred trying to retrieve probe configuration. Try again later. Error code: " + str(res.status_code) + ". Message: " + res.text)
             return json.loads({})
 
 
