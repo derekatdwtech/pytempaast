@@ -69,7 +69,7 @@ class Probe:
             if conf.status_code == 200:
                 return json.loads(conf.content.decode("UTF-8"))
             else:
-                logger.error("Unable to create noew probe configuration.")
+                logger.error("Unable to create new probe configuration.")
                 return json.loads({})
         else:
             logger.error("An unknown error has occurred trying to retrieve probe configuration. Try again later.")
