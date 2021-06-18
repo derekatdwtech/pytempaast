@@ -61,7 +61,7 @@ class Probe:
         BASE_CONFIG={"partitionKey": user, "rowKey": PROBE_ID, "nickname": self.name, "readingIntervalInSeconds": 300, "tempThresholdInCelcius": 0, "user_id": user}
 
         res = requests.get(self.config.GetApiUri() + "api/probe/config?probeId=" + PROBE_ID, headers=self.config.GetApiHeaders())
-        if res.status_code == 200:
+        if res.ok:
             json.loads(res.content.decode('utf-8'))[0]
         if res.status_code == 404:
             logger.warn("No probe configuration was found for probe " + PROBE_ID + ". Creating new configuration with config base...")
