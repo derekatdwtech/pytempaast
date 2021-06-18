@@ -63,7 +63,7 @@ class Probe:
         res = requests.get(self.config.GetApiUri() + "api/probe/config?probeId=" + PROBE_ID, headers=self.config.GetApiHeaders())
         if res.ok:
             json.loads(res.content.decode('utf-8'))[0]
-        if res.status_code == 404:
+        elif res.status_code == 404:
             logger.warn("No probe configuration was found for probe " + PROBE_ID + ". Creating new configuration with config base...")
             conf = requests.post(self.config.GetApiUri() + "api/probe/config", headers=self.config.GetApiHeaders(), data=json.dumps(BASE_CONFIG))
             if conf.status_code == 200:
