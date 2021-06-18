@@ -41,8 +41,11 @@ while True:
     # Check for backed messages
     message.CheckForBackUpMessages(config.GetTemperatureQueue())
     # Get Probe Configuration
-    pc = probe.GetProbeConfig(user_id)[0]
-    sleepTime = pc['readingIntervalInSeconds']
+    pc = probe.GetProbeConfig(user_id)
+    if isinstance(pc, list):
+        sleepTime = pc['readingIntervalInSeconds'][0]
+    else:
+        sleepTime = pc['readingIntervalInSeconds']
     logger.info("Probe read interval read as " + str(sleepTime))
     result = probe.readTemp(user_id)
 
