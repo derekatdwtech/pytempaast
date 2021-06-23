@@ -8,9 +8,6 @@ import requests
 import time
 import sys
 
-
-
-
 # CLI Parameters
 PROBE_DIR = sys.argv[1]
 PROBE_NAME = sys.argv[2]

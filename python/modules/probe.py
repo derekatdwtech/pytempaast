@@ -51,7 +51,7 @@ class Probe:
             self.temp_c = float(temp_string) / 1000.0
             self.temp_f = self.__celToFar(self.temp_c)
 
-            timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")
+            timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S%z")
             result = {'nickname':self.name,'time':timestamp, 'probe_id': PROBE_ID , 'user_id': user, 'temperature':{'f':self.temp_f,'c':self.temp_c}}
             return json.dumps(result)
 
