@@ -34,9 +34,3 @@ class Message:
                         out.write(line)
             out.close()
             file.close()
-
-
-
-
-                    
-

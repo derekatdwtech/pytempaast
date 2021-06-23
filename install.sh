@@ -11,7 +11,7 @@ bold="\e[1m"
 uline="\e[4m"
 reset="\e[0m"
 
-INSTALLATION_DIR=/opt/tempaasttest
+INSTALLATION_DIR=/opt/tempaast
 
 PROBES=()
 

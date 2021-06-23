@@ -35,9 +35,11 @@ user_id = json.loads(api_res.content.decode('UTF-8'))['userId']
 
 # Start polling
 while True:
+    # TODO: If cannot connect store local readings.
     # Check for backed messages
     message.CheckForBackUpMessages(config.GetTemperatureQueue())
     # Get Probe Configuration
+    # TODO: If cannot get probe config, fallback to last config reading
     pc = probe.GetProbeConfig(user_id)[0]
     sleepTime = pc['readingIntervalInSeconds']
     
