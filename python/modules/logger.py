@@ -11,8 +11,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler("pytempaast.log"),
-        logging.StreamHandler(sys.stdout)
+        fHand,
+        sHand
     ]
 )
 logger = logging.getLogger('tempaast')
