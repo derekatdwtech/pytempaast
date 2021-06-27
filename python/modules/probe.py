@@ -15,6 +15,7 @@ class Probe:
         self.name = name
         self.probeDir = probeDir
         self.probeFile = probeFile
+        self.probeConfig = None
         self.config = Config()
 
         if not os.path.exists(self.probeDir + "/" + self.probeFile):
@@ -62,20 +63,19 @@ class Probe:
 
         res = requests.get(self.config.GetApiUri() + "api/probe/config?probeId=" + PROBE_ID, headers=self.config.GetApiHeaders())
         if res.ok:
-            return json.loads(res.content.decode('utf-8'))
+            result = json.loads(res.content.decode('utf-8'))
+            self.probeConfig = result
         elif res.status_code == 404:
             logger.warn("No probe configuration was found for probe " + PROBE_ID + ". Creating new configuration with config base...")
             conf = requests.post(self.config.GetApiUri() + "api/probe/config", headers=self.config.GetApiHeaders(), data=json.dumps(BASE_CONFIG))
             if conf.status_code == 200:
                 result = []
                 result.append(json.loads(conf.content.decode("UTF-8")))
-                return result
+                self.probeConfig = result
             else:
-                logger.error("Unable to create new probe configuration.")
-                return json.loads({})
+                logger.error("Unable to create new probe configuration. Using default configuration.")
+                self.probeConfig = json.loads([BASE_CONFIG])
         else:
-            logger.error("An unknown error has occurred trying to retrieve probe configuration. Try again later. Error code: " + str(res.status_code) + ". Message: " + res.text)
-            return json.loads({})
-
-
-
+            logger.error("An unknown error has occurred trying to retrieve probe configuration. Response code: " + str(res.status_code) + ". Message: " + res.text + ". Falling back to previously used configuration.")
+            if self.probeConfig is None:
+                logger.critical("PANIC: If we have reached this far without a probe configuration, something has gone terribly wrong. Please contact the developers.")    

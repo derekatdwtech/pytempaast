@@ -88,7 +88,7 @@ else
 fi
 
 echo -e "${green}**********************************************************************************${reset}"
-echo -e "${green}********* Welcome to PyTempaast! LEt's walk you through the installation *********${rese}t"
+echo -e "${green}********* Welcome to PyTempaast! Let's walk you through the installation *********${rese}t"
 echo -e "${green}**********************************************************************************${reset}"
 
 #Ensure user has registered
