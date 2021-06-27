@@ -15,7 +15,7 @@ class Probe:
         self.name = name
         self.probeDir = probeDir
         self.probeFile = probeFile
-        self.probeConfig = {}
+        self.probeConfig = None
         self.config = Config()
 
         if not os.path.exists(self.probeDir + "/" + self.probeFile):
@@ -77,5 +77,5 @@ class Probe:
                 self.probeConfig = json.loads([BASE_CONFIG])
         else:
             logger.error("An unknown error has occurred trying to retrieve probe configuration. Response code: " + str(res.status_code) + ". Message: " + res.text + ". Falling back to previously used configuration.")
-            if not self.probeConfig:
+            if self.probeConfig is None:
                 logger.critical("PANIC: If we have reached this far without a probe configuration, something has gone terribly wrong. Please contact the developers.")    
